@@ -2,7 +2,7 @@
 #![no_main]
 #![feature(type_alias_impl_trait)]
 
-use defmt::info;
+use defmt::{debug, info};
 use embassy_executor;
 use embassy_executor::Spawner;
 use embassy_nrf::gpio::{Level, Output, OutputDrive};
@@ -22,6 +22,7 @@ async fn main(_spawner: Spawner) {
     let mut t3 = T::new(Output::new(p.P1_10, Level::High, OutputDrive::Standard));
 
     loop {
+        debug!("A");
         t0.activate_for(3).await;
         t1.activate_for(3).await;
         t2.activate_for(3).await;
@@ -29,14 +30,17 @@ async fn main(_spawner: Spawner) {
 
         //
 
+        debug!("B");
         futures::join!(t0.activate_for(3), t3.activate_for(3));
 
         //
 
+        debug!("C");
         futures::join!(t1.activate_for(3), t2.activate_for(3));
 
         //
 
+        debug!("D");
         let x = 3;
         for i in 0..x {
             t0.activate_for(x - i).await;
@@ -47,17 +51,20 @@ async fn main(_spawner: Spawner) {
 
         //
 
+        debug!("E");
         futures::join!(t0.activate_for(3), t1.activate_for(1), t2.activate_for(1), t3.activate_for(3));
         futures::join!(t0.activate_for(4), t1.activate_for(3), t2.activate_for(2), t3.activate_for(1));
         futures::join!(t0.activate_for(1), t1.activate_for(2), t2.activate_for(3), t3.activate_for(4));
 
         //
 
+        debug!("F");
         futures::join!(t0.activate_after(1), t1.activate_after(2), t2.activate_after(3), t3.activate_after(4));
         futures::join!(t0.deactivate_after(1), t1.deactivate_after(2), t2.deactivate_after(3), t3.deactivate_after(4));
 
         //
 
+        debug!("Completed");
         Timer::after(Duration::from_secs(5)).await;
     }
 }

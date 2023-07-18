@@ -24,7 +24,7 @@ impl<'a, P: embassy_nrf::gpio::Pin> T<'a, P> {
     pub async fn activate_for(&mut self, secs: u64) {
         self.activate();
         Timer::after(Duration::from_secs(secs)).await;
-        self.deactivate()
+        self.deactivate();
     }
 
     pub async fn activate_after(&mut self, secs: u64) {
