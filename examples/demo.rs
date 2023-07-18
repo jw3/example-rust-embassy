@@ -16,10 +16,10 @@ async fn main(_spawner: Spawner) {
     let p = embassy_nrf::init(Default::default());
     info!("Starting!");
 
-    let mut t0 = T::new(Output::new(p.P1_01, Level::High, OutputDrive::Standard));
-    let mut t1 = T::new(Output::new(p.P1_02, Level::High, OutputDrive::Standard));
-    let mut t2 = T::new(Output::new(p.P1_08, Level::High, OutputDrive::Standard));
-    let mut t3 = T::new(Output::new(p.P1_10, Level::High, OutputDrive::Standard));
+    let mut t0 = T::new("d2", Output::new(p.P1_01, Level::High, OutputDrive::Standard));
+    let mut t1 = T::new("d3", Output::new(p.P1_02, Level::High, OutputDrive::Standard));
+    let mut t2 = T::new("d4", Output::new(p.P1_08, Level::High, OutputDrive::Standard));
+    let mut t3 = T::new("d5", Output::new(p.P1_10, Level::High, OutputDrive::Standard));
 
     loop {
         debug!("A");
@@ -31,12 +31,12 @@ async fn main(_spawner: Spawner) {
         //
 
         debug!("B");
-        futures::join!(t0.activate_for(3), t3.activate_for(3));
+        futures::join!(async { t0.activate_for(3).await }, async { t3.activate_for(3).await });
 
         //
 
         debug!("C");
-        futures::join!(t1.activate_for(3), t2.activate_for(3));
+        futures::join!(async { t1.activate_for(3).await }, async { t2.activate_for(3).await });
 
         //
 
@@ -52,15 +52,15 @@ async fn main(_spawner: Spawner) {
         //
 
         debug!("E");
-        futures::join!(t0.activate_for(3), t1.activate_for(1), t2.activate_for(1), t3.activate_for(3));
-        futures::join!(t0.activate_for(4), t1.activate_for(3), t2.activate_for(2), t3.activate_for(1));
-        futures::join!(t0.activate_for(1), t1.activate_for(2), t2.activate_for(3), t3.activate_for(4));
+        futures::join!(async { t0.activate_for(3).await }, async { t1.activate_for(1).await }, async { t2.activate_for(1).await }, async { t3.activate_for(3).await });
+        futures::join!(async { t0.activate_for(4).await }, async { t1.activate_for(3).await }, async { t2.activate_for(2).await }, async { t3.activate_for(1).await });
+        futures::join!(async { t0.activate_for(1).await }, async { t1.activate_for(2).await }, async { t2.activate_for(3).await }, async { t3.activate_for(4).await });
 
         //
 
         debug!("F");
-        futures::join!(t0.activate_after(1), t1.activate_after(2), t2.activate_after(3), t3.activate_after(4));
-        futures::join!(t0.deactivate_after(1), t1.deactivate_after(2), t2.deactivate_after(3), t3.deactivate_after(4));
+        futures::join!(async { t0.activate_after(1).await }, async { t1.activate_after(2).await }, async { t2.activate_after(3).await }, async { t3.activate_after(4).await });
+        futures::join!(async { t0.deactivate_after(1).await }, async { t1.deactivate_after(2).await }, async { t2.deactivate_after(3).await }, async { t3.deactivate_after(4).await });
 
         //
 
