@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 embassy-executor = { git = "https://github.com/embassy-rs/embassy.git", features = ["nightly", "arch-cortex-m", "executor-thread", "executor-interrupt", "defmt", "integrated-timers"] }
 embassy-time = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt"] }
-embassy-nrf = { git = "https://github.com/embassy-rs/embassy.git", default-features = false, features = ["nrf52840", "time-driver-rtc1", "gpiote"] }
+embassy-nrf = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt", "nrf52840", "time-driver-rtc1", "gpiote",  "unstable-pac", "time"] }
 embassy-futures = { git = "https://github.com/embassy-rs/embassy.git" }
 
 cortex-m = { version = "0.7.6", features = ["inline-asm", "critical-section-single-core"] }
